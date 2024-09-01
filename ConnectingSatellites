@@ -1,0 +1,50 @@
+import pgzrun 
+import random
+import time
+WIDTH=800
+HEIGHT=600
+target=0
+totalnum=10
+list=[]
+lines=[]
+for i in range(10):
+    satellite1=Actor("satellite")
+    satellite1.pos=(random.randint(50,750), random.randint(50,550))
+    list.append(satellite1)
+Time=0
+Gamefin=False
+def draw():
+    global Time
+    screen.blit("background", (0,0))
+    satellitenum=1
+    for satellite in list:
+        satellite.draw()
+        screen.draw.text(str(satellitenum), (satellite.pos[0]-30, satellite.pos[1]))
+        satellitenum+=1
+    for line in lines:
+        screen.draw.line(line[0], line[1], "white")
+    screen.draw.text(str(Time), (0,0), color="white")
+def on_mouse_down(pos):
+    global target
+    global totalnum
+    global lines
+    global Gamefin
+    if target < totalnum:
+        if list[target].collidepoint(pos):
+            if target > 0:
+                lines.append((list[target-1].pos, list[target].pos))
+            target+=1
+            if target == totalnum:
+                Gamefin=True
+        else:
+            target=0
+            lines.clear()
+    else:
+        Gamefin=True
+def timer():
+    global Time
+    global Gamefin
+    if Gamefin==False:
+        Time+=1
+clock.schedule_interval(timer, 1)
+pgzrun.go()
